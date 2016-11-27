@@ -1,0 +1,16 @@
+prog exemplo;
+inteiro numero;
+funcao fatorial (inteiro fat) : inteiro;
+	se (fat > 1) entao
+		retorne (fat * fatorial(fat - 1));
+	senao
+		retorne 1;
+	fim;
+fim;
+funcao resultado (inteiro valor);
+	imprima ("Resultado", valor);
+	fim;
+
+leia (numero);
+resultado (fatorial (numero));
+fim;
