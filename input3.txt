@@ -1,0 +1,12 @@
+prog putaria;
+string d;
+string b,c;
+funcao concat(string a, string b):string;
+	se ( length(a) > length(b) ) entao
+		retorne a+b;
+	senao
+		retorne b+a;
+	fim;
+fim;
+concat("Oi", "PNC");
+fim;

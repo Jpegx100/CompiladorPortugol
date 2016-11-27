@@ -27,7 +27,7 @@ chamada_funcao_simples: ID '(' lista_parametros ')';
 repita: 'repita' lista_comandos 'ate' '(' teste_logico ')'';';
 lista_parametros: (ID|STRING|NUM|expressao|teste_logico|chamada_funcao_simples) (',' + lista_parametros)?;
 enquanto: 'enquanto' '(' teste_logico ')' 'faca' lista_comandos 'fim'';';
-teste_logico: (ID|NUM) (OPERADOR_LOGICO teste_logico)*
+teste_logico: (ID|NUM|chamada_funcao_simples|expressao) (OPERADOR_LOGICO teste_logico)*
             | '!' (ID|NUM)
             ;
 para: 'para' ID '=' (ID|NUM) 'ate' (ID|NUM) ('passo' (ID|NUM))? 'faca' lista_comandos 'fim'';';

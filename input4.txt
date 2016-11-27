@@ -1,0 +1,10 @@
+prog p;
+inteiro a;
+funcao fib(inteiro a);
+	se(a<2) entao
+		retorne 1;
+	fim;
+	retorne fib(a-1) + fib(a-2);
+fim;
+fib(20);
+fim;

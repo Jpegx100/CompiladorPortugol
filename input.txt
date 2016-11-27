@@ -1,3 +1,12 @@
-prog exemplo;
-
+prog teste;
+booleano c, d;
+funcao bool(booleano a, booleano b): booleano;
+	leia(c);
+	leia(d);
+	se (a >= d) entao
+		retorne c;
+	senao
+		retorne d;
+	fim;
+bool(a&b);
 fim;
