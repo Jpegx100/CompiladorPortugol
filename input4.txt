@@ -1,5 +1,6 @@
 prog p;
-inteiro a;
+inteiro a ;
+real b, c,d ,a;
 funcao fib(inteiro a);
 	se(a<2) entao
 		retorne 1;

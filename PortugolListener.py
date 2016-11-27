@@ -26,6 +26,15 @@ class PortugolListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by PortugolParser#variaveis.
+    def enterVariaveis(self, ctx:PortugolParser.VariaveisContext):
+        pass
+
+    # Exit a parse tree produced by PortugolParser#variaveis.
+    def exitVariaveis(self, ctx:PortugolParser.VariaveisContext):
+        pass
+
+
     # Enter a parse tree produced by PortugolParser#declaracao_parametros.
     def enterDeclaracao_parametros(self, ctx:PortugolParser.Declaracao_parametrosContext):
         pass

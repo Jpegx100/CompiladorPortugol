@@ -5,157 +5,181 @@ if __name__ is not None and "." in __name__:
     from .PortugolParser import PortugolParser
 else:
     from PortugolParser import PortugolParser
+class Variavel():
+    tipo = ""
+    def __init__(self, tipo):
+        self.tipo = tipo
+    def __str__(self):
+        return "Tipo: "+self.tipo
+
+class Funcao():
+    tipo_retorno = ""
+    lista_tipos = []
+
 
 class AcoesSemanticas(PortugolListener):
-# Enter a parse tree produced by PortugolParser#programa.
+    tabela_simbolos = {}
+    # Enter a parse tree produced by PortugolParser#programa.
     def enterPrograma(self, ctx:PortugolParser.ProgramaContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#programa.
     def exitPrograma(self, ctx:PortugolParser.ProgramaContext):
-        print(ctx.getText());pass
+        for (key, value) in self.tabela_simbolos.items():
+            print(value)
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#declaracao_variaveis.
-    def enterDeclaracao_variaveis(self, ctx:PortugolParser.Declaracao_variaveisContext):
-        print(ctx.getText());pass
+    def enterVariaveis(self, ctx:PortugolParser.Declaracao_variaveisContext):
+        tipo = ctx.TIPO()
+        w = [w for w in ctx.lista_variaveis().getText().split(" ")]
+        for i in w:
+            for j in i.split(","):
+                if self.tabela_simbolos.get(j)==None:
+                    var = Variavel(tipo)
+                    self.tabela_simbolos[j] = var
+        pass
 
     # Exit a parse tree produced by PortugolParser#declaracao_variaveis.
-    def exitDeclaracao_variaveis(self, ctx:PortugolParser.Declaracao_variaveisContext):
-        print(ctx.getText());pass
+    def exitVariaveis(self, ctx:PortugolParser.Declaracao_variaveisContext):
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#lista_variaveis.
     def enterLista_variaveis(self, ctx:PortugolParser.Lista_variaveisContext):
-        print(ctx.getText());pass
+        #print(">>")
+        #print(ctx.ID())
+        pass
 
     # Exit a parse tree produced by PortugolParser#lista_variaveis.
     def exitLista_variaveis(self, ctx:PortugolParser.Lista_variaveisContext):
-        print(ctx.getText());pass
+        #print("<<")
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#declaracao_funcoes.
     def enterDeclaracao_funcoes(self, ctx:PortugolParser.Declaracao_funcoesContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#declaracao_funcoes.
     def exitDeclaracao_funcoes(self, ctx:PortugolParser.Declaracao_funcoesContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#funcao.
     def enterFuncao(self, ctx:PortugolParser.FuncaoContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#funcao.
     def exitFuncao(self, ctx:PortugolParser.FuncaoContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#lista_comandos.
     def enterLista_comandos(self, ctx:PortugolParser.Lista_comandosContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#lista_comandos.
     def exitLista_comandos(self, ctx:PortugolParser.Lista_comandosContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#comando.
     def enterComando(self, ctx:PortugolParser.ComandoContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#comando.
     def exitComando(self, ctx:PortugolParser.ComandoContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#se_entao.
     def enterSe_entao(self, ctx:PortugolParser.Se_entaoContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#se_entao.
     def exitSe_entao(self, ctx:PortugolParser.Se_entaoContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#chamada_funcao.
     def enterChamada_funcao(self, ctx:PortugolParser.Chamada_funcaoContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#chamada_funcao.
     def exitChamada_funcao(self, ctx:PortugolParser.Chamada_funcaoContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#repita.
     def enterRepita(self, ctx:PortugolParser.RepitaContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#repita.
     def exitRepita(self, ctx:PortugolParser.RepitaContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#enquanto.
     def enterEnquanto(self, ctx:PortugolParser.EnquantoContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#enquanto.
     def exitEnquanto(self, ctx:PortugolParser.EnquantoContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#teste_logico.
     def enterTeste_logico(self, ctx:PortugolParser.Teste_logicoContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#teste_logico.
     def exitTeste_logico(self, ctx:PortugolParser.Teste_logicoContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#para.
     def enterPara(self, ctx:PortugolParser.ParaContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#para.
     def exitPara(self, ctx:PortugolParser.ParaContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#atribuicao.
     def enterAtribuicao(self, ctx:PortugolParser.AtribuicaoContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#atribuicao.
     def exitAtribuicao(self, ctx:PortugolParser.AtribuicaoContext):
-        print(ctx.getText());pass
+        pass
 
 
     # Enter a parse tree produced by PortugolParser#expressao.
     def enterExpressao(self, ctx:PortugolParser.ExpressaoContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#expressao.
     def exitExpressao(self, ctx:PortugolParser.ExpressaoContext):
-        print(ctx.getText());pass
+        pass
 
     # Enter a parse tree produced by PortugolParser#termo.
     def enterTermo(self, ctx:PortugolParser.TermoContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#termo.
     def exitTermo(self, ctx:PortugolParser.TermoContext):
-        print(ctx.getText());pass
+        pass
 
     # Enter a parse tree produced by PortugolParser#fator.
     def enterFator(self, ctx:PortugolParser.FatorContext):
-        print(ctx.getText());pass
+        pass
 
     # Exit a parse tree produced by PortugolParser#fator.
     def exitFator(self, ctx:PortugolParser.FatorContext):
-        print(ctx.getText());pass
+        pass
 
 class PortugolErrorListener( ErrorListener ):
     def __init__(self):

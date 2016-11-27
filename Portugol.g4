@@ -2,8 +2,9 @@ grammar Portugol;
 
 programa: 'prog' ID ';' declaracao_variaveis declaracao_funcoes lista_comandos 'fim' ';'
 	;
-declaracao_variaveis: (TIPO lista_variaveis ';')+
+declaracao_variaveis: (variaveis)+
 	;
+variaveis: TIPO lista_variaveis ';';
 declaracao_parametros: TIPO ID (',' TIPO ID)*;
 lista_variaveis: ID 
 	| ID ',' lista_variaveis
