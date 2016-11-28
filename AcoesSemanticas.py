@@ -7,11 +7,12 @@ else:
     from PortugolParser import PortugolParser
 class Variavel():
     tipo = ""
-    def __init__(self, tipo):
+    nome = ""
+    def __init__(self, tipo, nome):
         self.tipo = tipo
+        self.nome = nome
     def __str__(self):
-        return "Tipo: "+self.tipo
-
+        return "Nome: "+self.nome+" - Tipo: "+str(self.tipo)
 class Funcao():
     tipo_retorno = ""
     lista_tipos = []
@@ -37,8 +38,11 @@ class AcoesSemanticas(PortugolListener):
         for i in w:
             for j in i.split(","):
                 if self.tabela_simbolos.get(j)==None:
-                    var = Variavel(tipo)
+                    var = Variavel(tipo, j)
                     self.tabela_simbolos[j] = var
+                else:
+                    print("Variavel já definida como: ")
+                    print(self.tabela_simbolos.get(j))
         pass
 
     # Exit a parse tree produced by PortugolParser#declaracao_variaveis.
