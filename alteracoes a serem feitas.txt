@@ -1,0 +1,4 @@
+*tratamento de variaveis locais
+*numeros negativos
+
+---IC---

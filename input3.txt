@@ -9,4 +9,6 @@ funcao concat(string a, string b):string;
 	fim;
 fim;
 concat("Oi", "PNC");
+funcao a(string b);
+fim;
 fim;

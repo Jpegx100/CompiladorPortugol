@@ -1,9 +1,10 @@
 prog p;
 inteiro a ;
-real b, c,d ,a;
-funcao fib(inteiro a);
+real b, c,d;
+funcao fib(inteiro a, real b);
 	se(a<2) entao
 		retorne 1;
+		aa = a+b;
 	fim;
 	retorne fib(a-1) + fib(a-2);
 fim;

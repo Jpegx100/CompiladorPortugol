@@ -17,6 +17,15 @@ class PortugolListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by PortugolParser#cabecalho.
+    def enterCabecalho(self, ctx:PortugolParser.CabecalhoContext):
+        pass
+
+    # Exit a parse tree produced by PortugolParser#cabecalho.
+    def exitCabecalho(self, ctx:PortugolParser.CabecalhoContext):
+        pass
+
+
     # Enter a parse tree produced by PortugolParser#declaracao_variaveis.
     def enterDeclaracao_variaveis(self, ctx:PortugolParser.Declaracao_variaveisContext):
         pass
@@ -35,12 +44,12 @@ class PortugolListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by PortugolParser#declaracao_parametros.
-    def enterDeclaracao_parametros(self, ctx:PortugolParser.Declaracao_parametrosContext):
+    # Enter a parse tree produced by PortugolParser#parametro.
+    def enterParametro(self, ctx:PortugolParser.ParametroContext):
         pass
 
-    # Exit a parse tree produced by PortugolParser#declaracao_parametros.
-    def exitDeclaracao_parametros(self, ctx:PortugolParser.Declaracao_parametrosContext):
+    # Exit a parse tree produced by PortugolParser#parametro.
+    def exitParametro(self, ctx:PortugolParser.ParametroContext):
         pass
 
 
@@ -68,6 +77,15 @@ class PortugolListener(ParseTreeListener):
 
     # Exit a parse tree produced by PortugolParser#funcao.
     def exitFuncao(self, ctx:PortugolParser.FuncaoContext):
+        pass
+
+
+    # Enter a parse tree produced by PortugolParser#tipo_retorno.
+    def enterTipo_retorno(self, ctx:PortugolParser.Tipo_retornoContext):
+        pass
+
+    # Exit a parse tree produced by PortugolParser#tipo_retorno.
+    def exitTipo_retorno(self, ctx:PortugolParser.Tipo_retornoContext):
         pass
 
 
@@ -152,12 +170,39 @@ class PortugolListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by PortugolParser#comparacao.
+    def enterComparacao(self, ctx:PortugolParser.ComparacaoContext):
+        pass
+
+    # Exit a parse tree produced by PortugolParser#comparacao.
+    def exitComparacao(self, ctx:PortugolParser.ComparacaoContext):
+        pass
+
+
     # Enter a parse tree produced by PortugolParser#teste_logico.
     def enterTeste_logico(self, ctx:PortugolParser.Teste_logicoContext):
         pass
 
     # Exit a parse tree produced by PortugolParser#teste_logico.
     def exitTeste_logico(self, ctx:PortugolParser.Teste_logicoContext):
+        pass
+
+
+    # Enter a parse tree produced by PortugolParser#teste_logico2.
+    def enterTeste_logico2(self, ctx:PortugolParser.Teste_logico2Context):
+        pass
+
+    # Exit a parse tree produced by PortugolParser#teste_logico2.
+    def exitTeste_logico2(self, ctx:PortugolParser.Teste_logico2Context):
+        pass
+
+
+    # Enter a parse tree produced by PortugolParser#teste_logico3.
+    def enterTeste_logico3(self, ctx:PortugolParser.Teste_logico3Context):
+        pass
+
+    # Exit a parse tree produced by PortugolParser#teste_logico3.
+    def exitTeste_logico3(self, ctx:PortugolParser.Teste_logico3Context):
         pass
 
 
@@ -203,6 +248,24 @@ class PortugolListener(ParseTreeListener):
 
     # Exit a parse tree produced by PortugolParser#fator.
     def exitFator(self, ctx:PortugolParser.FatorContext):
+        pass
+
+
+    # Enter a parse tree produced by PortugolParser#numero.
+    def enterNumero(self, ctx:PortugolParser.NumeroContext):
+        pass
+
+    # Exit a parse tree produced by PortugolParser#numero.
+    def exitNumero(self, ctx:PortugolParser.NumeroContext):
+        pass
+
+
+    # Enter a parse tree produced by PortugolParser#numero_real.
+    def enterNumero_real(self, ctx:PortugolParser.Numero_realContext):
+        pass
+
+    # Exit a parse tree produced by PortugolParser#numero_real.
+    def exitNumero_real(self, ctx:PortugolParser.Numero_realContext):
         pass
 
 
