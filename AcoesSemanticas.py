@@ -26,10 +26,14 @@ class Funcao():
         self.nome = nome
     def __str__(self):
         params = [str(i) for i in self.lista_parametros]
-        tipo_r = self.tipo_retorno if self.tipo_retorno!="" else "None"
+        tipo_r = self.tipo_retorno if self.tipo_retorno!="" else "vazio"
         return "funcao{nome: "+str(self.nome)+", parametros: "+str(params)+", tipo_retorno: "+tipo_r+"}"
 
 class AcoesSemanticas(PortugolListener):
+    PALAVRAS_RESERVADAS = ['prog','fim','funcao','retorne','se','entao',
+                            'senao','repita','ate','enquanto','faca','para',
+                            'inteiro', 'real', 'booleano', 'string', 'passo', 
+                            'verdadeiro', 'falso', 'sair']
     ERRORS = []
     INTEIRO = "inteiro"
     REAL = "real"
@@ -41,20 +45,22 @@ class AcoesSemanticas(PortugolListener):
     def exitPrograma(self, ctx:PortugolParser.ProgramaContext):
         print(self.ERRORS)
         return
-    # Enter a parse tree produced by PortugolParser#declaracao_variaveis.
+
     def enterVariaveis(self, ctx:PortugolParser.Declaracao_variaveisContext):
         tipo = ctx.TIPO()
         w = [w for w in ctx.lista_variaveis().getText().split(" ")]
         for i in w:
             for j in i.split(","):
-                if self.tabela_simbolos.get(j)==None:
-                    var = Variavel(tipo, j)
-                    self.tabela_simbolos[j] = var
+                if j not in self.PALAVRAS_RESERVADAS:
+                    if self.tabela_simbolos.get(j)==None:
+                        var = Variavel(tipo, j)
+                        self.tabela_simbolos[j] = var
+                    else:
+                        self.ERRORS.append(VARIAVEL_FUNCAO_JA_DECLARADA+self.tabela_simbolos.get(j).nome)
                 else:
-                    self.ERRORS.append(VARIAVEL_FUNCAO_JA_DECLARADA+self.tabela_simbolos.get(j).nome)
+                    self.ERRORS.append(PALAVRA_RESERVADA+j)
         pass
 
-    # Enter a parse tree produced by PortugolParser#funcao.
     def enterFuncao(self, ctx:PortugolParser.FuncaoContext):
         if ctx.ID().getText() not in self.tabela_simbolos:
             parametros = []
@@ -73,7 +79,6 @@ class AcoesSemanticas(PortugolListener):
             self.tabela_simbolos[ctx.ID().getText()] = fun
         else:
             self.ERRORS.append(VARIAVEL_FUNCAO_JA_DECLARADA+ctx.ID().getText())
-        #Falta checar o tipo de retorno da função
 
     def exitFuncao(self, ctx:PortugolParser.FuncaoContext):
         self.funcao_atual = None
@@ -111,26 +116,25 @@ class AcoesSemanticas(PortugolListener):
             operador = ctx.op.text
             tp1, tp2 = str(ctx.termo()._tipo), str(ctx.fator()._tipo)
             if tp1 not in self.tipos_numericos or tp2 not in self.tipos_numericos:
+                tp1 = tp1 if tp1 and tp1!="None" else "vazio"
+                tp2 = tp2 if tp2 and tp2!="None" else "vazio"
                 self.ERRORS.append(ERRO_TIPOS_INCOMPATIVEIS+tp1+" > "+tp2)
-                pass
             if tp1==tp2:
                 ctx._tipo = tp1
             else:
                 ctx._tipo = "real"
         elif ctx.fator():
             if str(ctx.fator()._tipo) not in self.tipos_numericos:
-                #ERRORS.append(ERRO_TIPO_NAO_NUMERICO+str(ctx.fator()._tipo))
                 ctx._tipo = str(ctx.fator()._tipo)
-                pass
             ctx._tipo = ctx.fator()._tipo
-        pass
     
     def exitExpressao(self, ctx:PortugolParser.ExpressaoContext):
         if ctx.expressao():
             tp1, tp2 = str(ctx.expressao()._tipo), str(ctx.termo()._tipo)
             if tp1 not in self.tipos_numericos or tp2 not in self.tipos_numericos:
+                tp1 = tp1 if tp1 and tp1!="None" else "vazio"
+                tp2 = tp2 if tp2 and tp2!="None" else "vazio"
                 self.ERRORS.append(ERRO_TIPOS_INCOMPATIVEIS+tp1+" > "+tp2)
-                pass
             if tp1==tp2:
                 ctx._tipo = tp1
             else:
@@ -161,7 +165,21 @@ class AcoesSemanticas(PortugolListener):
     def enterLista_parametros(self, ctx:PortugolParser.Lista_parametrosContext):
         pass
     
-    def enterExpressao(self, ctx:PortugolParser.ExpressaoContext):
+    def exitAtribuicao(self, ctx:PortugolParser.AtribuicaoContext):
+        if (ctx.ID().getText() in self.tabela_simbolos):
+            simbolo = self.tabela_simbolos[ctx.ID().getText()]
+            if isinstance(simbolo, Variavel):
+                if ctx.expressao():
+                    if str(simbolo.tipo) != str(ctx.expressao()._tipo):
+                        self.ERRORS.append(ERRO_TIPOS_INCOMPATIVEIS+str(simbolo.tipo)+" > "+str(ctx.expressao()._tipo))
+                elif ctx.teste_logico():
+                    if str(simbolo.tipo) != str(ctx.teste_logico()._tipo):
+                        self.ERRORS.append(ERRO_TIPOS_INCOMPATIVEIS+str(simbolo.tipo)+" > "+str(ctx.teste_logico()._tipo))
+            else:
+                if ctx.expressao():
+                    self.ERRORS.append(ATRIBUICAO_PARA_FUNCAO+ctx.expressao().getText())
+                elif ctx.teste_logico():
+                    self.ERRORS.append(ATRIBUICAO_PARA_FUNCAO+ctx.teste_logico().getText())
         pass
     
     def enterFator(self, ctx:PortugolParser.FatorContext):

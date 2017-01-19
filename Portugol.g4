@@ -73,7 +73,7 @@ TIPO: 'inteiro'
     | 'string' 
     ;
 FIM: 'fim' ';'; 
-BOOL: 'VERDADEIRO' | 'FALSO'; 
+BOOL: 'verdadeiro' | 'falso';
 NEGACAO: '!';
 E_LOGICO: '&';
 OU_LOGICO: '|';
