@@ -1,0 +1,15 @@
+prog exemplo;
+inteiro numero;
+//real numero;
+
+funcao fatorial (inteiro fat);
+	se (fat > 1) entao
+		retorne (fat * fatorial(fat - 1));
+	senao
+		retorne 1;
+	fim;
+	//retorne 2;
+fim;
+
+numero = fatorial(5.0) - 3;
+fim;

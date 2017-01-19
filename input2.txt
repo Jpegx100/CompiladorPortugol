@@ -8,7 +8,7 @@ funcao fatorial (inteiro fat) : inteiro;
 	fim;
 fim;
 funcao resultado (inteiro valor);
-	imprima ("Resultado", valor);
+	imprima ("resultado", valor);
 	fim;
 
 leia (numero);

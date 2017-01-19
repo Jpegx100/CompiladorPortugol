@@ -1,6 +1,6 @@
 grammar Portugol; 
 
-programa: cabecalho declaracao_variaveis declaracao_funcoes lista_comandos FIM;
+programa: cabecalho declaracao_variaveis declaracao_funcoes lista_comandos 'fim' '.';
 cabecalho: 'prog' ID ';';
 declaracao_variaveis: (variaveis)*;
 variaveis: TIPO lista_variaveis ';';
@@ -10,23 +10,23 @@ lista_variaveis: ID
         ;
 declaracao_funcoes: funcao*;
 funcao: 'funcao' ID '(' parametro (',' parametro)* ')' (':' tipo_retorno)? ';' declaracao_variaveis lista_comandos retorne? FIM;
-tipo_retorno: TIPO;
+tipo_retorno: TIPO; 
 lista_comandos: comando+;
 comando: se_entao 
        | atribuicao
        | para
        | enquanto
        | repita
-       | chamada_funcao
+       | chamada_funcao 
        | retorne
        | SAIR
 	;
-retorne: 'retorne' (ID|NUM|expressao|STRING|teste_logico|chamada_funcao_simples) ';';
+retorne: 'retorne' (ID|STRING|expressao|teste_logico) ';';
 se_entao: 'se' '(' teste_logico ')' 'entao' lista_comandos ('senao' lista_comandos)? FIM;
 chamada_funcao: ID '(' lista_parametros ')' ';';
 chamada_funcao_simples: ID '(' lista_parametros ')';
 repita: 'repita' lista_comandos 'ate' '(' teste_logico ')'';';
-lista_parametros: (ID|STRING|NUM|expressao|teste_logico|chamada_funcao_simples) (',' + lista_parametros)?;
+lista_parametros: (STRING|expressao|teste_logico) (',' + lista_parametros)?;
 enquanto: 'enquanto' '(' teste_logico ')' 'faca' lista_comandos FIM;
 
 comparacao returns [String _tipo]: expressao OPERADOR_COMPARACAO expressao;
@@ -46,7 +46,7 @@ teste_logico3 returns [String _tipo]
         | NEGACAO teste_logico
         ;
 
-para: 'para' ID '=' (ID|NUM) 'ate' (ID|NUM) ('passo' (ID|NUM))? 'faca' lista_comandos FIM;
+para: 'para' ID '=' (ID|numero) 'ate' (ID|numero) ('passo' (ID|numero))? 'faca' lista_comandos FIM;
 atribuicao: ID '=' (expressao|teste_logico) ';';
 
 expressao returns [String _tipo]
@@ -58,31 +58,31 @@ termo returns [String _tipo]
 	| fator
 	;
 fator returns [String _tipo]
-        : numero
-        | numero_real
-	| ID
+        : ID
 	| '(' expressao ')'
 	| chamada_funcao_simples
+        | numero
+        | numero_real
         ;
 
-numero : NUM;
-numero_real: NUM_REAL;
+numero : '-'? NUM ;
+numero_real: '-'? NUM_REAL;
 TIPO: 'inteiro'
-    | 'real'
-    | 'booleano'
-    | 'string'
+    | 'real' 
+    | 'booleano' 
+    | 'string' 
     ;
-FIM: 'fim' ';';
-BOOL: 'VERDADEIRO' | 'FALSO';
+FIM: 'fim' ';'; 
+BOOL: 'VERDADEIRO' | 'FALSO'; 
 NEGACAO: '!';
 E_LOGICO: '&';
 OU_LOGICO: '|';
 OPERADOR_COMPARACAO : '>' | '<' | '<=' | '>=' | '==' | '!=';
 SAIR: 'sair' ';';
 ID: [a-zA-Z][a-zA-Z0-9]*;
-NUM : '-'?[0-9]+;
-NUM_REAL: '-'?[0-9]+ '.' [0-9]+;
-STRING: '\"'[a-zA-Z0-9]*'\"';
+NUM : [0-9]+;
+NUM_REAL: [0-9]+ '.' [0-9]+;
+STRING: '\"' .* '\"';
 WS: [ \t\r\n] -> skip;
 COMMENT
     : '/*' .*? '*/' -> skip

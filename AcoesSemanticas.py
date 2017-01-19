@@ -6,11 +6,6 @@ if __name__ is not None and "." in __name__:
     from .PortugolParser import PortugolParser
 else:
     from PortugolParser import PortugolParser
-ERRORS = []
-INTEIRO = "inteiro"
-REAL = "real"
-BOOLEANO = "booleano"
-STRING = "string"
 
 class Variavel():
     tipo = ""
@@ -35,11 +30,17 @@ class Funcao():
         return "funcao{nome: "+str(self.nome)+", parametros: "+str(params)+", tipo_retorno: "+tipo_r+"}"
 
 class AcoesSemanticas(PortugolListener):
+    ERRORS = []
+    INTEIRO = "inteiro"
+    REAL = "real"
+    BOOLEANO = "booleano"
+    STRING = "string"
+    tipos_numericos = [INTEIRO, REAL]
     tabela_simbolos = {}
-    
+    funcao_atual = None
     def exitPrograma(self, ctx:PortugolParser.ProgramaContext):
-        print(ERRORS)
-        pass
+        print(self.ERRORS)
+        return
     # Enter a parse tree produced by PortugolParser#declaracao_variaveis.
     def enterVariaveis(self, ctx:PortugolParser.Declaracao_variaveisContext):
         tipo = ctx.TIPO()
@@ -50,68 +51,85 @@ class AcoesSemanticas(PortugolListener):
                     var = Variavel(tipo, j)
                     self.tabela_simbolos[j] = var
                 else:
-                    print("Variavel já definida como: ")
-                    print(self.tabela_simbolos.get(j))
+                    self.ERRORS.append(VARIAVEL_FUNCAO_JA_DECLARADA+self.tabela_simbolos.get(j).nome)
         pass
 
     # Enter a parse tree produced by PortugolParser#funcao.
     def enterFuncao(self, ctx:PortugolParser.FuncaoContext):
-        parametros = []
-        for i in ctx.parametro():
-            var = Variavel(i.TIPO(), i.ID())
-            parametros.append(var)
-        tipo_r = ctx.tipo_retorno().getText() if ctx.tipo_retorno() else ""
-        fun = Funcao(tipo_r, parametros, ctx.ID().getText())
-        self.tabela_simbolos[ctx.ID().getText()] = fun
-        pass
+        if ctx.ID().getText() not in self.tabela_simbolos:
+            parametros = []
+            for i in ctx.parametro():
+                var = Variavel(i.TIPO(), i.ID())
+                parametros.append(var)
+            if ctx.tipo_retorno():
+                tipo_r = ctx.tipo_retorno().getText()
+            else:
+                tipo_r = "vazio"
+                for comando in ctx.lista_comandos().comando():
+                    for i in range(comando.getText().count("retorne")):
+                        self.ERRORS.append(FUNCAO_SEM_RETORNO+"")
+            self.funcao_atual = ctx.ID().getText()
+            fun = Funcao(tipo_r, parametros, ctx.ID().getText())
+            self.tabela_simbolos[ctx.ID().getText()] = fun
+        else:
+            self.ERRORS.append(VARIAVEL_FUNCAO_JA_DECLARADA+ctx.ID().getText())
+        #Falta checar o tipo de retorno da função
+
+    def exitFuncao(self, ctx:PortugolParser.FuncaoContext):
+        self.funcao_atual = None
     
     def printtb(self):
         print(self.tabela_simbolos.keys())
-
-    def enterTeste_logico(self, ctx:PortugolParser.Teste_logicoContext):
-        # print("tl1 "+ctx.getText())
+    
+    def exitFator(self, ctx:PortugolParser.FatorContext):
+        if ctx.numero_real():
+            ctx._tipo = self.REAL
+        elif ctx.numero():
+            ctx._tipo = self.INTEIRO
+        elif ctx.ID():
+            if(self.tabela_simbolos.get(ctx.ID().getText())):
+                ctx._tipo = self.tabela_simbolos.get(ctx.ID().getText()).tipo
+            else:
+                if self.funcao_atual!=None:
+                    for parametro in self.tabela_simbolos[self.funcao_atual].lista_parametros:
+                        if str(parametro.nome) == ctx.ID().getText():
+                            ctx._tipo = parametro.tipo
+                            return 
+                self.ERRORS.append(VARIAVEL_FUNCAO_NAO_DECLARADA+ctx.ID().getText())
+        elif ctx.expressao():
+            ctx._tipo = ctx.expressao()._tipo
+        elif ctx.chamada_funcao_simples():
+            nome_funcao = ctx.chamada_funcao_simples().ID().getText()
+            if nome_funcao in self.tabela_simbolos:
+                ctx._tipo = self.tabela_simbolos[nome_funcao].tipo_retorno
+            else:
+                self.ERRORS.append(VARIAVEL_FUNCAO_NAO_DECLARADA+nome_funcao)
         pass
-    def enterTeste_logico2(self, ctx:PortugolParser.Teste_logico2Context):
-        # print("tl2 "+ctx.getText())
-        pass
-    def enterTeste_logico3(self, ctx:PortugolParser.Teste_logico3Context):
-        # print("tl3 "+ctx.getText())
-        pass
-    def enterComparacao(self, ctx:PortugolParser.ComparacaoContext):
-        # print("cop "+ctx.getText())
-        pass
-    def enterTermo(self, ctx:PortugolParser.TermoContext):
-        # print("termo "+ctx.getText())
-        pass 
     
     def exitTermo(self, ctx:PortugolParser.TermoContext):
         if ctx.termo():
             operador = ctx.op.text
             tp1, tp2 = str(ctx.termo()._tipo), str(ctx.fator()._tipo)
-            if tp1 not in ["inteiro", "real"] or tp2 not in ["inteiro", "real"]:
-                ERRORS.append(ERRO_TIPOS_INCOMPATIVEIS+tp1+">>"+tp2)
+            if tp1 not in self.tipos_numericos or tp2 not in self.tipos_numericos:
+                self.ERRORS.append(ERRO_TIPOS_INCOMPATIVEIS+tp1+" > "+tp2)
                 pass
             if tp1==tp2:
                 ctx._tipo = tp1
             else:
                 ctx._tipo = "real"
         elif ctx.fator():
-            if str(ctx.fator()._tipo) not in ["inteiro", "real"]:
+            if str(ctx.fator()._tipo) not in self.tipos_numericos:
                 #ERRORS.append(ERRO_TIPO_NAO_NUMERICO+str(ctx.fator()._tipo))
                 ctx._tipo = str(ctx.fator()._tipo)
                 pass
             ctx._tipo = ctx.fator()._tipo
         pass
     
-    def enterExpressao(self, ctx:PortugolParser.ExpressaoContext):
-        # print("exp "+ctx.getText())
-        pass
-    
     def exitExpressao(self, ctx:PortugolParser.ExpressaoContext):
         if ctx.expressao():
             tp1, tp2 = str(ctx.expressao()._tipo), str(ctx.termo()._tipo)
-            if tp1 not in [INTEIRO, REAL] or tp2 not in [INTEIRO, REAL]:
-                ERRORS.append(ERRO_TIPOS_INCOMPATIVEIS+tp1+">"+tp2)
+            if tp1 not in self.tipos_numericos or tp2 not in self.tipos_numericos:
+                self.ERRORS.append(ERRO_TIPOS_INCOMPATIVEIS+tp1+" > "+tp2)
                 pass
             if tp1==tp2:
                 ctx._tipo = tp1
@@ -119,38 +137,38 @@ class AcoesSemanticas(PortugolListener):
                 ctx._tipo = "real"
         else:
             tp1 = str(ctx.termo()._tipo)
-            if tp1 not in [INTEIRO, REAL]:
+            if tp1 not in self.tipos_numericos:
                 #ERRORS.append(ERRO_TIPO_NAO_NUMERICO+tp1)
                 ctx._tipo = tp1
                 pass
             else:
                 ctx._tipo = tp1
         pass
-    
-    # Enter a parse tree produced by PortugolParser#fator.
-    def enterFator(self, ctx:PortugolParser.FatorContext):
-        # print("fat "+ctx.getText())
+    def enterChamada_funcao_simples(self, ctx:PortugolParser.Chamada_funcao_simplesContext):
+        if ctx.ID().getText() not in self.tabela_simbolos:
+            if ctx.ID().getText()!="leia" and ctx.ID().getText()!="imprima":
+                self.ERRORS.append(VARIAVEL_FUNCAO_NAO_DECLARADA+ctx.ID().getText())
         pass
 
-    # Exit a parse tree produced by PortugolParser#fator.
-    def exitFator(self, ctx:PortugolParser.FatorContext):
-        global ERRORS
-        if ctx.numero_real():
-            ctx._tipo = REAL
-        elif ctx.numero():
-            ctx._tipo = INTEIRO
-        elif ctx.ID():
-            if(self.tabela_simbolos.get(ctx.ID().getText())):
-                ctx._tipo = self.tabela_simbolos.get(ctx.ID().getText()).tipo
-            else:
-                ERRORS.append(VARIAVEL_FUNCAO_NAO_DECLARADA+ctx.ID().getText())
-        elif ctx.expressao():
-            ctx._tipo = ctx.expressao()._tipo
-        elif ctx.chamada_funcao_simples():
-            nome_funcao = ctx.chamada_funcao_simples().ID().getText()
-            ctx._tipo = self.tabela_simbolos[nome_funcao].tipo_retorno
+    def exitChamada_funcao_simples(self, ctx:PortugolParser.Chamada_funcao_simplesContext):
+        pass
+
+    def enterChamada_funcao(self, ctx:PortugolParser.Chamada_funcaoContext):
+        if ctx.ID().getText() not in self.tabela_simbolos:
+            if ctx.ID().getText()!="leia" and ctx.ID().getText()!="imprima":
+                self.ERRORS.append(VARIAVEL_FUNCAO_NAO_DECLARADA+ctx.ID().getText())
+
+    def enterLista_parametros(self, ctx:PortugolParser.Lista_parametrosContext):
         pass
     
+    def enterExpressao(self, ctx:PortugolParser.ExpressaoContext):
+        pass
+    
+    def enterFator(self, ctx:PortugolParser.FatorContext):
+        pass
+    def enterParametro(self, ctx:PortugolParser.ParametroContext):
+        # print(ctx.getText())
+        pass
     # def exitTeste_logico(self, ctx:PortugolParser.Teste_logicoContext):
     #     if ctx.OPERADOR_LOGICO:
     #         tp1 = str(ctx.teste_logico_esquerdo()._tipo)

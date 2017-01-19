@@ -1,14 +1,20 @@
 prog putaria;
 string d;
-string b,c;
+string b, c;
+
+funcao length(string a):inteiro;
+	retorne 1;
+fim;
+
 funcao concat(string a, string b):string;
 	se ( length(a) > length(b) ) entao
-		retorne a+b;
+		retorne length(a)+length(b);
 	senao
-		retorne b+a;
+		retorne length(b)+length(a);
 	fim;
 fim;
-concat("Oi", "PNC");
-funcao a(string b);
-fim;
+length(b);
+concat("oi", "pnc");
+//funcao a(string b);
+//fim;
 fim;

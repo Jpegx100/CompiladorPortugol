@@ -1,5 +1,5 @@
 prog teste;
 	inteiro x;
-	se (VERDADEIRO&FALSO|x!=2) entao
+	se (verdadeiro&falso|x!=2) entao
 		imprima(3);
 fim;

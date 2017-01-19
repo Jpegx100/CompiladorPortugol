@@ -1,0 +1,20 @@
+prog teste2;
+	inteiro	i, n1, opcao;
+	real soma;
+	repita
+		soma = 0;
+		leia(n1);
+		se	(n1	> 0) entao
+			para i=1 ate n1 faca
+				soma = soma	+ i;
+			fim;
+		senao
+			para i=n1 ate 1 passo -1 faca
+				soma = soma + i;
+			fim;
+		fim;
+		imprima	(soma);
+		imprima("deseja continuar?	(-1	para	sair)");
+		leia(opcao);
+	ate	(opcao==-1);
+fim;

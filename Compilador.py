@@ -7,7 +7,16 @@ from AcoesSemanticas import *
 from antlr4.tree.Trees import Trees
 from antlr4.tree.Tree import TerminalNodeImpl
 
+def lower_arquivo(path):
+    arq = open(path,'r')
+    texto = arq.read().lower()
+    arq.close
+    arq = open(path,'w')
+    arq.write(texto)
+    arq.close()
+
 def main(argv):
+    lower_arquivo(argv[1])
     input = FileStream(argv[1])
     lexer = PortugolLexer(input)
     stream = CommonTokenStream(lexer)

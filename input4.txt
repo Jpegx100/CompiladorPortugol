@@ -1,12 +1,14 @@
 prog p;
 inteiro a ;
 real b, c,d;
-funcao fib(inteiro a, real b);
+funcao fib(inteiro a, real b): inteiro;
+	inteiro x, y, z;
 	se(a<2) entao
 		retorne 1;
 		aa = a+b;
 	fim;
+	fib(a-1);
 	retorne fib(a-1) + fib(a-2);
 fim;
-fib(20);
+fib(20, 20.1);
 fim;
